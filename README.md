@@ -1,10 +1,10 @@
-# 🕷️ Python Web Scraping & Data Extraction Toolkit
+# Python Web Scraping & Data Extraction Toolkit
 
 A collection of resilient, production-ready Python web scrapers and automated data extraction pipelines. Built to demonstrate clean parsing, pagination handling, anti-blocking considerations, and structured exports (CSV & JSON).
 
 ---
 
-## 📦 What's Inside
+## What's Inside
 
 | Scraper Script | Target Type | Key Features | Output Formats |
 | :--- | :--- | :--- | :--- |
@@ -14,7 +14,7 @@ A collection of resilient, production-ready Python web scrapers and automated da
 
 ---
 
-## 📊 Sample Extracted Data
+## Sample Extracted Data
 
 ### 1. E-Commerce Catalog (`sample_data/sample_books.csv`)
 Extracted from a multi-page product catalog with price cleaning and rating normalization:
@@ -36,12 +36,12 @@ Aggregated real-time positions filtered by technical skillsets:
 
 ---
 
-## 🚀 Quickstart & Usage
+## Quickstart & Usage
 
 ### 1. Setup
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/python-web-scrapers.git
+git clone https://github.com/atharvachauhan25/python-web-scrapers.git
 cd python-web-scrapers
 
 # Install requirements
@@ -62,7 +62,7 @@ python remote_job_scraper.py --keywords python backend engineer --limit 25
 
 ---
 
-## 🛠️ Tech Stack & Methodologies
+## Tech Stack & Methodologies
 - **Languages & Libraries:** Python 3, `BeautifulSoup4`, `requests`, `curl-cffi`, `urllib`
 - **Techniques Used:**
   - Robust CSS selector parsing & regex data cleanup.
@@ -72,7 +72,7 @@ python remote_job_scraper.py --keywords python backend engineer --limit 25
 
 ---
 
-## 💼 Freelance Services & Custom Scraping
+## Freelance Services & Custom Scraping
 Need custom data extraction, web automation, or a dedicated scraper for your project?
 
 - **Custom Web Scrapers**: E-commerce, directories, real-estate, lead generation.
@@ -80,4 +80,4 @@ Need custom data extraction, web automation, or a dedicated scraper for your pro
 - **Automation Scripts**: Scheduled tasks, price monitoring, Discord/Telegram notification bots.
 - **Fast Turnaround**: Most scripts delivered within 24–48 hours.
 
-📩 **Get in Touch:** DM me on Reddit / Discord or open an issue here!
+**Get in Touch:** DM me on Reddit / Discord or open an issue here!
