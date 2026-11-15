@@ -1,83 +1,114 @@
-# Python Web Scraping & Data Extraction Toolkit
+# 🕷️ Python Web Scraping, Automation & QA Testing Suite
 
-A collection of resilient, production-ready Python web scrapers and automated data extraction pipelines. Built to demonstrate clean parsing, pagination handling, anti-blocking considerations, and structured exports (CSV & JSON).
+[![CI Test Suite](https://github.com/atharvachauhan25/python-web-scrapers/actions/workflows/ci.yml/badge.svg)](https://github.com/atharvachauhan25/python-web-scrapers/actions)
+[![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org/)
+[![Code Style](https://img.shields.io/badge/code%20style-PEP%208-green.svg)](https://peps.python.org/pep-0008/)
+[![Test Framework](https://img.shields.io/badge/tested%20with-pytest-yellow)](https://docs.pytest.org/)
+
+A production-grade Python toolkit combining **resilient web scraping**, **automated data validation pipelines (Pydantic)**, **formatted multi-column Excel reporting (`xlsxwriter`)**, and **automated web/API regression testing**.
 
 ---
 
-## What's Inside
+## 📦 What's Inside
 
-| Scraper Script | Target Type | Key Features | Output Formats |
+| Module / Script | Category | Core Capabilities | Output Formats |
 | :--- | :--- | :--- | :--- |
-| **`ecommerce_scraper.py`** | E-Commerce Catalogs | Multi-page pagination, price normalization, star-rating mapping, availability checks | CSV, JSON |
-| **`remote_job_scraper.py`** | Job Boards & Live Feeds | Real-time lead generation, keyword & skill filtering, timestamp conversion | CSV, JSON |
-| **`reddit_task_scanner.py`** | Community & Forum Feeds | TLS fingerprint impersonation (`curl_cffi`), anti-bot bypass, opportunity detection | CSV, JSON |
+| **`ecommerce_scraper.py`** | Web Scraping | Multi-page pagination, price normalization, star-rating mapping, availability checks | CSV, JSON |
+| **`remote_job_scraper.py`** | Lead Generation | Live remote tech job aggregator, keyword/skill filtering, timestamp parsing | CSV, JSON |
+| **`reddit_task_scanner.py`** | Forum & Social | TLS fingerprint impersonation (`curl_cffi`), anti-bot bypass, opportunity detection | CSV, JSON |
+| **`data_pipeline.py`** | Data Engineering | **Pydantic schema validation**, corrupt data filtering, styled multi-tab Excel export | Styled `.xlsx` |
+| **`api_monitor.py`** | Automation & QA | Automated health assertions, status verification, latency benchmarks & QA reporting | Console, Markdown |
+| **`tests/test_scrapers.py`** | Automated Testing | Unit & integration test suite (`pytest`) covering parsing, edge cases, and schemas | Test Reports |
 
 ---
 
-## Sample Extracted Data
+## 🧪 Automated Testing & QA Suite (`pytest`)
 
-### 1. E-Commerce Catalog (`sample_data/sample_books.csv`)
-Extracted from a multi-page product catalog with price cleaning and rating normalization:
+The codebase includes an automated test suite executed via GitHub Actions on every commit and pull request.
 
-| Title | Price (GBP) | Rating (/5) | In Stock | URL |
-| :--- | :---: | :---: | :---: | :--- |
-| **A Light in the Attic** | £51.77 | ⭐⭐⭐ | Yes | [Link](http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html) |
-| **Tipping the Velvet** | £53.74 | ⭐ | Yes | [Link](http://books.toscrape.com/catalogue/tipping-the-velvet_999/index.html) |
-| **Soumission** | £50.10 | ⭐ | Yes | [Link](http://books.toscrape.com/catalogue/soumission_998/index.html) |
-| **Sharp Objects** | £47.82 | ⭐⭐⭐⭐ | Yes | [Link](http://books.toscrape.com/catalogue/sharp-objects_997/index.html) |
+```bash
+# Run the complete test suite
+pytest -v
+```
 
-### 2. Live Job & Lead Feeds (`sample_data/sample_jobs.csv`)
-Aggregated real-time positions filtered by technical skillsets:
-
-| Position | Company | Location | Tags | Date Posted |
-| :--- | :--- | :--- | :--- | :---: |
-| **Scientific Account Executive** | Adaptyv | Lausanne | `api, sales, golang, engineer` | 2026-10-31 |
-| **AWS Cloud Solutions Architect** | Cloudary SAS | Remote | `docker, postgres, sql, api, cloud` | 2026-10-30 |
+### Coverage Highlights:
+- ✅ **Price normalization edge cases**: Accurately extracts floats from currency symbols (`£51.77`, `$19.99`, `Free` -> `0.0`).
+- ✅ **Mock DOM extraction**: Unit tests verify HTML parsing without live network dependencies.
+- ✅ **Pydantic schema constraints**: Strictly rejects corrupted records (negative prices, missing titles, out-of-range star ratings).
+- ✅ **Excel report generation**: Verifies non-empty binary `.xlsx` generation with proper styles.
 
 ---
 
-## Quickstart & Usage
+## 🛡️ Data Validation & Formatted Excel Export
 
-### 1. Setup
+Instead of dumping unvalidated raw data, `data_pipeline.py` enforces data contracts using **Pydantic**:
+
+```python
+class ScrapedProduct(BaseModel):
+    title: str = Field(..., min_length=1)
+    price_gbp: float = Field(..., ge=0.0)
+    rating_out_of_5: int = Field(..., ge=0, le=5)
+    in_stock: bool = True
+    url: str
+```
+
+It exports directly to a formatted Excel workbook (`sample_data/sample_books.xlsx`) featuring:
+- Custom styled navy-blue header row with centered alignment.
+- Numeric currency formatting (`£#,##0.00`).
+- Automated column width adjustments for clean readability.
+
+---
+
+## 🩺 Automated API & Website Health Monitor
+
+`api_monitor.py` runs automated regression assertions against live web endpoints:
+
+```bash
+python api_monitor.py
+```
+
+### Sample Automated QA Output:
+```text
+=================================================================
+  AUTOMATED QA REGRESSION & HEALTH REPORT: 3/3 PASSED
+=================================================================
+Endpoint                  | Status  | Latency    | Result
+-----------------------------------------------------------------
+Books To Scrape Catalog   | 200     | 1436.06 ms | ✅ PASS
+RemoteOK Public API       | 200     | 804.81  ms | ✅ PASS
+HackerNews API Item       | 200     | 656.50  ms | ✅ PASS
+=================================================================
+```
+
+---
+
+## 🚀 Quickstart & Installation
+
 ```bash
 # Clone the repository
 git clone https://github.com/atharvachauhan25/python-web-scrapers.git
 cd python-web-scrapers
 
-# Install requirements
+# Install dependencies
 pip install -r requirements.txt
-```
 
-### 2. Run E-Commerce Scraper
-Scrapes products across multiple pages with built-in rate-limiting:
-```bash
-python ecommerce_scraper.py --pages 5 --csv output_books.csv
-```
+# Run all tests
+pytest -v
 
-### 3. Run Remote Jobs / Lead Scraper
-Filter by specific keywords:
-```bash
-python remote_job_scraper.py --keywords python backend engineer --limit 25
+# Run scrapers & generate sample data
+python ecommerce_scraper.py --pages 3
+python data_pipeline.py
+python api_monitor.py
 ```
 
 ---
 
-## Tech Stack & Methodologies
-- **Languages & Libraries:** Python 3, `BeautifulSoup4`, `requests`, `curl-cffi`, `urllib`
-- **Techniques Used:**
-  - Robust CSS selector parsing & regex data cleanup.
-  - Rate-limit handling & respectful crawling delays (`time.sleep`).
-  - Handling modern anti-bot protections via TLS browser impersonation.
-  - Automated structured export to clean UTF-8 CSV and JSON.
+## 💼 Freelance Services
+Need custom data pipelines, scraping bots, or automated testing tools?
 
----
+- **Custom Web Scrapers**: Resilient against anti-bot challenges and layout changes.
+- **Data Engineering**: Data cleaning, schema validation, and styled Excel / Google Sheets delivery.
+- **QA & Automation**: API regression tests, scheduled uptime monitors, and Telegram/Discord alerting bots.
+- **Fast Turnaround**: 24–48 hours delivery with full documentation and source code.
 
-## Freelance Services & Custom Scraping
-Need custom data extraction, web automation, or a dedicated scraper for your project?
-
-- **Custom Web Scrapers**: E-commerce, directories, real-estate, lead generation.
-- **Data Cleanup & Formatting**: Raw HTML/JSON into clean Excel/CSV/Google Sheets.
-- **Automation Scripts**: Scheduled tasks, price monitoring, Discord/Telegram notification bots.
-- **Fast Turnaround**: Most scripts delivered within 24–48 hours.
-
-**Get in Touch:** DM me on Reddit / Discord or open an issue here!
+📩 **Contact:** DM on Reddit / Discord or open a GitHub issue!
