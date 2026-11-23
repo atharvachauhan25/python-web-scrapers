@@ -6,6 +6,7 @@ from pydantic import ValidationError
 from ecommerce_scraper import clean_price, RATING_MAP
 from data_pipeline import ScrapedProduct, validate_and_clean_products, export_styled_excel
 from api_monitor import EndpointCheck, CheckResult
+from b2b_lead_scraper import B2BLeadScraper, BusinessLead
 
 def test_clean_price():
     """Verify regex price normalization handles various currency formats."""
@@ -94,3 +95,42 @@ def test_excel_export_generation(tmp_path):
 
     assert os.path.exists(output_file)
     assert os.path.getsize(output_file) > 1000 # Valid xlsx file header size
+
+def test_b2b_lead_scraper_parsing():
+    """Verify B2BLeadScraper correctly extracts name, normalized phone, and address from HTML cards."""
+    scraper = B2BLeadScraper(city="Pune", category="Dental Clinic")
+    mock_html = """
+    <div class="business-card">
+        <h3 class="title">Smiles Dental Clinic</h3>
+        <span class="phone">9822014829</span>
+        <div class="address">Kothrud, Pune</div>
+        <a class="website" href="https://smilespune.in">Website</a>
+    </div>
+    """
+    leads = scraper.parse_directory_html(mock_html)
+    assert len(leads) == 1
+    assert leads[0].name == "Smiles Dental Clinic"
+    assert leads[0].clean_phone() == "+91 98220 14829"
+    assert leads[0].location == "Kothrud, Pune"
+    assert leads[0].website == "https://smilespune.in"
+
+def test_b2b_lead_csv_export(tmp_path):
+    """Verify B2BLeadScraper writes a formatted CSV with correct headers."""
+    scraper = B2BLeadScraper(city="Pune")
+    lead = BusinessLead(
+        name="Test Clinic",
+        category="Dental",
+        phone="+91 98220 00000",
+        location="Baner, Pune",
+        city="Pune",
+        website="https://test.com"
+    )
+    out_csv = str(tmp_path / "test_leads.csv")
+    scraper.export_to_csv([lead], out_csv)
+
+    assert os.path.exists(out_csv)
+    with open(out_csv, "r", encoding="utf-8") as f:
+        content = f.read()
+    assert "Clinic / Business Name" in content
+    assert "Test Clinic" in content
+    assert "+91 98220 00000" in content

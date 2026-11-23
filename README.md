@@ -13,6 +13,7 @@ A production-grade Python toolkit combining **resilient web scraping**, **automa
 
 | Module / Script | Category | Core Capabilities | Output Formats |
 | :--- | :--- | :--- | :--- |
+| **`b2b_lead_scraper.py`** | B2B & Lead Gen | Local business directory scraping, contact parsing, phone normalization | CSV, Excel |
 | **`ecommerce_scraper.py`** | Web Scraping | Multi-page pagination, price normalization, star-rating mapping, availability checks | CSV, JSON |
 | **`remote_job_scraper.py`** | Lead Generation | Live remote tech job aggregator, keyword/skill filtering, timestamp parsing | CSV, JSON |
 | **`reddit_task_scanner.py`** | Forum & Social | TLS fingerprint impersonation (`curl_cffi`), anti-bot bypass, opportunity detection | CSV, JSON |
@@ -96,6 +97,7 @@ pip install -r requirements.txt
 pytest -v
 
 # Run scrapers & generate sample data
+python b2b_lead_scraper.py
 python ecommerce_scraper.py --pages 3
 python data_pipeline.py
 python api_monitor.py
