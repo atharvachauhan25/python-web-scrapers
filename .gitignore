@@ -6,3 +6,6 @@ venv/
 .env
 .vscode/
 .idea/
+
+# Freelance Assets
+*4.3.*
